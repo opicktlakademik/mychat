@@ -1,2 +1,2 @@
 # mychat
-Ini adalah project skrisi saya
+Ini adalah project skripsi saya
