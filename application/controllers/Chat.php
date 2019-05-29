@@ -7,6 +7,7 @@ class Chat extends CI_Controller{
   {
     parent::__construct();
     if ($this->session->userdata('loggin') !== TRUE OR $this->session->userdata('nama') === NULL) {
+      $this->session->set_flashdata('message', "<b style='color:red'>Access Denied!</b>");
       redirect('Login');
     }
     $this->load->model(array('ChatModel'));
@@ -34,6 +35,11 @@ class Chat extends CI_Controller{
     }else {
       echo FALSE;
     }
+  }
+
+  function encrypt()
+  {
+    $this->load->view('encrypt');
   }
 
 }

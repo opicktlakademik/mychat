@@ -6,8 +6,7 @@ $('.list-click').click(function(){
     if (success && e != false) {
       $('#chat-box').empty();
       var data = JSON.parse(e);
-
-      //key compromizing
+      $('#chat-box').append(data);
 
     }else {
       console.log("Something wrong success = "+success+" e = "+e);
