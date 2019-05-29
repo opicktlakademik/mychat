@@ -234,8 +234,11 @@ class PakdeEnrcyption {
     var dict2_dec_m = this.matrix_decryption(dict2_cipher, this.dict_public_2);
     var dict2 = this.caesar_cipher_decryption(dict2_dec_m, dict1.split(""), key2);
     //decrypting ciphertext
-    var plaintext_dec_m = this.matrix_decryption(ciphertext, dict2.split(""));
-    var plaintext = 'DISABLED';//this.caesar_cipher_decryption(plaintext_dec_m, dict1.split(""), 0, false);
+    var plaintext_dec_m = this.matrix_decryption_test(ciphertext, dict2);
+    var plaintext = this.caesar_cipher_decryption(plaintext_dec_m, dict1, 0, false);
+    //disabled value
+    //var plaintext_dec_m = 'disabled';
+    //var plaintext = 'disabled';
     //returning
     //return plaintext;
     var object = {
@@ -252,7 +255,7 @@ class PakdeEnrcyption {
       dict1_dec_c:dict1,
       dict2_cipher:dict2_cipher,
       dict2_dec_m: dict2_dec_m,
-      dict2_dec_c: dict2,
+      dict2_dec_c: dict2.split(""),
       len_dict2_cipher:dict2_cipher.length,
       final_ciphertext:ciphertext_complete,
       len_1 :len_public + (len_ciphertext/2),
@@ -301,12 +304,72 @@ class PakdeEnrcyption {
     for (var i = 0; i < word.length; i++) {
       var check = this.dict3.indexOf(word[i]);
       if (check !== false) {
+        //var index_i = parseInt(word[i]);
+        //var index_j = parseInt(word[j]);
         result += dict2[word[i]][word[j]];
+        i++;
+        j += 2;
+        continue;
       }else {
         result += " ";
+        i++;
+        j += 2;
       }
-      j += 2;
-      i++;
+    }
+    return result;
+  }
+
+  matrix_decryption_test(ciphertext, alphabet){
+
+    if (Array.isArray(alphabet)) {
+      var dict2 = alphabet;
+    }else {
+      var num = 0;
+      var dict = alphabet.split("");
+      var exit = false;
+      var dict2 = new Array();
+      for (var i = 0; i < 10; i++) {
+        if (!exit) {
+          dict2[i] = new Array();
+        }else{
+          break;
+        }
+        for (var j = 0; j < 10; j++) {
+          if (typeof dict[num] !== 'undefined') {
+            dict2[i][j] = dict[num];
+            num++;
+          }else {
+            exit = true;
+            break;
+          }
+        }
+      }
+
+    }
+
+    var word = ciphertext.split("");
+    var result = "";
+    var j = 1;
+
+    for (var i = 0; i < word.length; i++) {
+      var check = true;
+      for (var o = 0; o < this.dict3.length; o++) {
+        if (word[i] === this.dict3[o]) {
+          check = false;
+          break;
+        }
+      }
+      if (check) {
+        //var index_i = parseInt(word[i]);
+        //var index_j = parseInt(word[j]);
+        result += dict2[word[i]][word[j]];
+        i++;
+        j += 2;
+      }else {
+        result += ' ';
+        i++;
+        j += 2;
+      }
     }
     return result;
   }
@@ -321,7 +384,13 @@ class PakdeEnrcyption {
         key = parseInt(word.length);
       }
       for (var i = 0; i < word.length; i++) {
-        var index = dict1.indexOf(word[i]);
+        var index = false;
+        for (var o = 0; o < dict1.length; o++) {
+          if (word[i] === dict1[o]) {
+            index = o;
+            break;
+          }
+        }
         if (index !== false) {
           var replacer = (parseInt(index) - key) % len_dict1;
           if (replacer < 0) {
@@ -331,8 +400,8 @@ class PakdeEnrcyption {
           }else {
             result += dict1[replacer];
           }
-        }else if (word[i] == " ") {
-          result += " ";
+        }else if (!index) {
+          result += ' ';
         }else {
           result += "#";
         }

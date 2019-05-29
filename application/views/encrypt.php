@@ -10,11 +10,14 @@
     </script>
   </head>
   <body>
-      <h1 align='center'>For Testing Puropose</h1>
+      <h1 align='center'>For Testing Purpose</h1>
+      <div class="echo-packing">
+
+      </div>
       <script type="text/javascript">
         $(document).ready(function(){
           var Encryption = new PakdeEnrcyption();
-          console.log(Encryption.encrypt());
+          Encryption.encrypt();
         });
       </script>
   </body>
