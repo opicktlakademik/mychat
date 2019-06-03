@@ -28,14 +28,14 @@ class PakdeEnrcyption {
     //split the aplha
     this.dict_public_1 = this.public_alpha.split("");
     //make dict1 using fisher_yates_shuffle
-    this.dict1 = this.public_alpha.split("");
+    this.dict1 = this.dict_public_1;
     var n = this.dict1.length;
-  /*  for (var i = n - 1 ; i >= 0 ; i--) {
+    for (var i = n - 1 ; i >= 0 ; i--) {
       var j = Math.floor(Math.random() * i);
       var temp = this.dict1[i];
       this.dict1[i] = this.dict1[j];
       this.dict1[j] = temp;
-    }*/
+    }
     //make 2 dimension array of dict public 2 and dict2
     var num = 0;
     var exit = false;
@@ -58,7 +58,7 @@ class PakdeEnrcyption {
       }
     }
     //shuffle dict2 using fisher_yates_shuffle
-    /*for (var i = 0; i < this.dict2.length; i++) {
+    for (var i = 0; i < this.dict2.length; i++) {
       n = this.dict2.length - 1;
       for (var j = n; j>= 0; j--) {
         var k = Math.floor(Math.random() * j);
@@ -66,7 +66,7 @@ class PakdeEnrcyption {
         this.dict2[i][j] = this.dict2[i][k];
         this.dict2[i][k] = temp;
       }
-    }*/
+    }
     //make dict 3 for space in the matrix_decryption
     this.dict3 = this.dict3.split("");
   }
@@ -112,7 +112,7 @@ class PakdeEnrcyption {
     text = text.replace("\n", "|");
     var plaintext = text.split("");
 
-    if (key === 0) {
+    if (key == 0) {
       key = parseInt(plaintext.length);
     }
 
@@ -234,7 +234,7 @@ class PakdeEnrcyption {
     var dict2_dec_m = this.matrix_decryption(dict2_cipher, this.dict_public_2);
     var dict2 = this.caesar_cipher_decryption(dict2_dec_m, dict1.split(""), key2);
     //decrypting ciphertext
-    var plaintext_dec_m = this.matrix_decryption_test(ciphertext, dict2);
+    var plaintext_dec_m = this.matrix_decryption(ciphertext, dict2);
     var plaintext = this.caesar_cipher_decryption(plaintext_dec_m, dict1, 0, false);
     //disabled value
     //var plaintext_dec_m = 'disabled';
@@ -255,7 +255,7 @@ class PakdeEnrcyption {
       dict1_dec_c:dict1,
       dict2_cipher:dict2_cipher,
       dict2_dec_m: dict2_dec_m,
-      dict2_dec_c: dict2.split(""),
+      dict2_dec_c: dict2,
       len_dict2_cipher:dict2_cipher.length,
       final_ciphertext:ciphertext_complete,
       len_1 :len_public + (len_ciphertext/2),
@@ -269,7 +269,7 @@ class PakdeEnrcyption {
     return object;
   }
 
-  matrix_decryption(ciphertext, alphabet){
+  /* matrix_decryption_ori(ciphertext, alphabet){
 
     if (Array.isArray(alphabet)) {
       var dict2 = alphabet;
@@ -317,9 +317,9 @@ class PakdeEnrcyption {
       }
     }
     return result;
-  }
+  } */
 
-  matrix_decryption_test(ciphertext, alphabet){
+  matrix_decryption(ciphertext, alphabet){
 
     if (Array.isArray(alphabet)) {
       var dict2 = alphabet;
