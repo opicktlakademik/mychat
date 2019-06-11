@@ -10,8 +10,8 @@ class PakdeEnrcyption {
     this.initializing();
   }
 
-  encrypt(){
-    var word1 = this.caesar_cipher("Mochamad Taufikurrohman Mochamad Taufikurrohman", this.dict1, 0);
+  encrypt_test(){
+    var word1 = this.caesar_cipher("Mochamad Taufikurrohman", this.dict1, 0);
     var word2 = this.matrix_encryption(word1, this.dict2);
     var packed = this.packing(word2, 2, 2);
     var unpacked = this.unpacking(packed, 2, 2);
@@ -22,6 +22,18 @@ class PakdeEnrcyption {
       unpack:unpacked,
     };
     return report;
+  }
+
+  encrypt(plaintext, key1, key2){
+    var encrypt1 = this.caesar_chiper(plaintext, this.dict1, 0);
+    var encrypt2 = this.matrix_encryption(encrypt1, this.dict2);
+    var packing = this.packing(encrypt2, key1, key2);
+    return packing;
+  }
+
+  decrypt(ciphertext, key1, key2){
+    var plaintext = this.unpacking(ciphertext, key1, key2);
+    return plaintext;
   }
 
   initializing(){
@@ -187,7 +199,7 @@ class PakdeEnrcyption {
 
     var full_ciphertext = piece_dict1_1+piece_cipher1+cd2_m+piece_cipher2+piece_dict1_2;
     //return full_ciphertext;
-    var object = {
+  /*  var object = {
       plaintext_d1: plaintext_d1,
       plaintext_d2: plaintext_d2,
       public_1: this.dict_public_1,
@@ -196,7 +208,7 @@ class PakdeEnrcyption {
       len_plaintext_d1: plaintext_d1.length,
       len_plaintext_d2: plaintext_d2.length,
     };
-    console.log(object);
+    console.log(object); */
     return full_ciphertext;
   }
 
@@ -227,8 +239,8 @@ class PakdeEnrcyption {
     //var plaintext_dec_m = 'disabled';
     //var plaintext = 'disabled';
     //returning
-    //return plaintext;
-    var object = {
+    return plaintext;
+    /*var object = {
       dict_public_1: this.dict_public_1,
       dict_public_2: this.dict_public_2,
       dict1: dict1,
@@ -239,7 +251,7 @@ class PakdeEnrcyption {
       plaintext_dec_m: plaintext_dec_m,
     }
     console.log(object);
-    return object;
+    return object;*/
   }
 
   /* matrix_decryption_ori(ciphertext, alphabet){
