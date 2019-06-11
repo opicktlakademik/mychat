@@ -18,6 +18,7 @@
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dist/css/skins/_all-skins.min.css">
 
+  <script src="<?php echo base_url(); ?>assets/myjs/PakdeEncryption.js"></script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -33,6 +34,9 @@
   border: solid;
   border-color: rgba(0,0,0,0.1);
   margin-top: 0;
+}
+div.height-bro {
+  height: 100% !important;
 }
 </style>
 </head>
@@ -113,15 +117,17 @@
               <?php endforeach; ?>
              </ul>
           </div>
-          <div class="col-sm-9" id="chat-box">
-            <div class="box box-primary box-solid">
-              <div class="box-header with-border">
-                <h1 class="box-title">Welcome</h1>
-              </div>
-              <div class="box-body">
-                <div class="welcome">
-                  <h1>Welcome to simple chat</h1>
-                  <p>Click user on the left side to start chatting</p>
+          <div class="height-bro">
+            <div class="col-sm-9" id="chat-box">
+              <div class="box box-primary box-solid">
+                <div class="box-header with-border">
+                  <h1 class="box-title">Welcome</h1>
+                </div>
+                <div class="box-body">
+                  <div class="welcome">
+                    <h1>Welcome to simple chat</h1>
+                    <p>Click user on the left side to start chatting</p>
+                  </div>
                 </div>
               </div>
             </div>

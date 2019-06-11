@@ -11,10 +11,10 @@ class PakdeEnrcyption {
   }
 
   encrypt(){
-    var word1 = this.caesar_cipher("AB C", this.dict_public_1, 0);
-    var word2 = this.matrix_encryption(word1, this.dict_public_2);
+    var word1 = this.caesar_cipher("Mochamad Taufikurrohman Mochamad Taufikurrohman", this.dict1, 0);
+    var word2 = this.matrix_encryption(word1, this.dict2);
     var packed = this.packing(word2, 2, 2);
-    var unpacked = this.unpacking(packed.full_ciphertext, 2, 2);
+    var unpacked = this.unpacking(packed, 2, 2);
     var report = {
       packing:packed,
       //encrypt1:word1,
@@ -27,8 +27,9 @@ class PakdeEnrcyption {
   initializing(){
     //split the aplha
     this.dict_public_1 = this.public_alpha.split("");
+    var public_alpha = this.public_alpha.split("");
     //make dict1 using fisher_yates_shuffle
-    this.dict1 = this.dict_public_1;
+    this.dict1 = public_alpha;
     var n = this.dict1.length;
     for (var i = n - 1 ; i >= 0 ; i--) {
       var j = Math.floor(Math.random() * i);
@@ -47,9 +48,10 @@ class PakdeEnrcyption {
         this.dict2[i] = new Array();
       }
       for (var j = 0; j < 10; j++) {
-        if (typeof this.dict_public_1[num] !== 'undefined') {
-          this.dict_public_2[i][j] = this.dict_public_1[num];
-          this.dict2[i][j] = this.dict_public_1[num];
+        if (typeof public_alpha[num] !== 'undefined') {
+          public_alpha = this.public_alpha.split("");
+          this.dict_public_2[i][j] = public_alpha[num];
+          this.dict2[i][j] = this.dict1[num];
           num++;
         }else {
           exit = true;
@@ -57,6 +59,7 @@ class PakdeEnrcyption {
         }
       }
     }
+    //this.dict2 = this.dict_public_2;
     //shuffle dict2 using fisher_yates_shuffle
     for (var i = 0; i < this.dict2.length; i++) {
       n = this.dict2.length - 1;
@@ -97,14 +100,10 @@ class PakdeEnrcyption {
     //count a = g^x mod n
     var a = Math.pow(g, x) % n;
     var ret = [a, n, g];
-    console.log("n = "+ n);
-    console.log("g = " + g);
-    console.log("x = "+ x);
-    console.log("a = " + a);
     return ret;
   }
 
-  caesar_cipher(text, alphabet = 0, key = 0){
+  caesar_cipher(text, alphabet, key = 0){
 
     var dict = alphabet;
     var enc = "";
@@ -189,28 +188,16 @@ class PakdeEnrcyption {
     var full_ciphertext = piece_dict1_1+piece_cipher1+cd2_m+piece_cipher2+piece_dict1_2;
     //return full_ciphertext;
     var object = {
-      plaintext_d1:plaintext_d1,
+      plaintext_d1: plaintext_d1,
+      plaintext_d2: plaintext_d2,
+      public_1: this.dict_public_1,
+      public_2: this.dict_public_2,
+      cipertext: piece_cipher1+piece_cipher2,
       len_plaintext_d1: plaintext_d1.length,
-      len_dict1:len_dict1,
-      dict1_caesar:cd1,
-      dict1_matrix:cd1_m,
-      piece_dict1_1:piece_dict1_1,
-      piece_dict1_2:piece_dict1_2,
-      plaintext_d2:plaintext_d2,
-      len_dict2:len_dict2,
-      dict2_casar:cd2,
-      dict2_matrix:cd2_m,
-      ciphertext:ciphertext,
-      len_ciphertext:len_ciphertext,
-      len_ciphertext_complete:full_ciphertext.length,
-      full_ciphertext:full_ciphertext,
-      dict_public_2:this.dict_public_2,
-      len_dict1_caesar:cd1.length,
-      len_dict2_caesar:cd2.length,
+      len_plaintext_d2: plaintext_d2.length,
     };
-    console.log("Packing");
     console.log(object);
-    return object;
+    return full_ciphertext;
   }
 
   unpacking(ciphertext_complete, key1, key2){
@@ -242,29 +229,15 @@ class PakdeEnrcyption {
     //returning
     //return plaintext;
     var object = {
-      len_ciphertext_complete:len_ciphertext_complete,
-      len_ciphertext:len_ciphertext,
-      len_public:len_public,
-      plaintext:plaintext,
-      plaintext_dec_m: plaintext_dec_m,
-      dict1_cipher:dict1_cipher,
-      len_dict1_cipher:dict1_cipher.length,
-      dict1_1:dict1_1,
-      dict1_2:dict1_2,
-      dict1_dec_m:dict1_dec_m,
-      dict1_dec_c:dict1,
-      dict2_cipher:dict2_cipher,
-      dict2_dec_m: dict2_dec_m,
-      dict2_dec_c: dict2,
-      len_dict2_cipher:dict2_cipher.length,
-      final_ciphertext:ciphertext_complete,
-      len_1 :len_public + (len_ciphertext/2),
-      len_2 : len_public * 2,
+      dict_public_1: this.dict_public_1,
+      dict_public_2: this.dict_public_2,
+      dict1: dict1,
+      dict2: dict2,
       ciphertext:ciphertext,
-      ciphertext_1:ciphertext_1,
-      ciphertext_2:ciphertext_2
+      ciphertext_c:plaintext_dec_m,
+      plaintext: plaintext,
+      plaintext_dec_m: plaintext_dec_m,
     }
-    console.log("unpack");
     console.log(object);
     return object;
   }

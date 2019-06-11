@@ -11,6 +11,7 @@ class Chat extends CI_Controller{
       redirect('Login');
     }
     $this->load->model(array('ChatModel'));
+    $this->load->library('PakdeEncryption_v2' , NULL, 'pakde');
   }
 
   function index()
@@ -31,7 +32,9 @@ class Chat extends CI_Controller{
     // code...
     if ($_GET['getBox'] !== NULL AND isset($_GET['getBox']) AND $_GET['getBox'] = "Okk..") {
       $page = $this->load->view('chat_box.php', NULL, TRUE);
-      echo json_encode($page);
+      $key1Client = $_GET['key1'];
+      $key1Server = $this->pakde->diffieHellman();
+
     }else {
       echo FALSE;
     }
