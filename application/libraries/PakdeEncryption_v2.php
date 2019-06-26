@@ -21,14 +21,15 @@ class PakdeEncryption_v2
   }
 
 
-  function encrypt($value = NULL, $key_chiper_1 = 2, $key_chiper_2 = 2)
+  function encrypt($value = NULL, $key_chiper_1, $key_chiper_2)
   {
     if ($value !== NULL) {
+
       $encrypt1 = $this->caesar_chiper($value, $this->dict1);
       $encrypt2 = $this->matrix_encryption($encrypt1, $this->dict2);
       $packaged = $this->packing($encrypt2, $key_chiper_1, $key_chiper_2);
-      $unpacking = $this->unpacking($packaged, $key_chiper_1, $key_chiper_2);
-      return array('caesar' => $encrypt1, 'matrix' => $encrypt2, 'package' => $packaged, 'unpack' => $unpacking, 'reportpack' => $this->reportpack, 'reportunpack' => $this->reportunpack);
+      return $packaged;
+      
     }else {
       return NULL;
     }
@@ -306,35 +307,39 @@ class PakdeEncryption_v2
     return $result;
   }
 
-  function diffieHellman($a = NULL, $n = NULL, $g = NULL)
+  function diffieHellman($generate_key = true, $n = 0, $g = 0, $alice = 0)
   {
-    $bob_a = $a;
-    $bob_n = $n;
-    $bob_g = $g;
-    $bob_x = rand(20, 100);
-    $temp1 = 5;
-    $temp2 = 7;
-    $j = 2;
-    $prime = array($temp1, $temp2);
-    for ($i=0; $i < 50; $i++) {
-      $temp1 += 6;
-      if ($temp1 % 5 != 0 AND $temp1 % 7 != 0) {
-        $prime[$j] = $temp1;
-        $j++;
-      }
-      $temp2 += 6;
-      if ($temp2 % 5 != 0 AND $temp2 % 7 != 0) {
-        $prime[$j] = $temp2;
-        $j++;
-      }
-     }
-    $index_n = rand(8, sizeof($prime) - 1);
-    $index_g = rand(0, $index_n);
-    $bob_n = $prime[$index_n];
-    $bob_g = $prime[$index_g];
-    $bob_a = pow($bob_g, $bob_x) % $bob_n;
+    $y = rand(20, 100);
+    if ($generate_key) {
+      // code...
+      $temp1 = 5;
+      $temp2 = 7;
+      $j = 2;
+      $prime = array($temp1, $temp2);
+      for ($i=0; $i < 50; $i++) {
+        $temp1 += 6;
+        if ($temp1 % 5 != 0 AND $temp1 % 7 != 0) {
+          $prime[$j] = $temp1;
+          $j++;
+        }
+        $temp2 += 6;
+        if ($temp2 % 5 != 0 AND $temp2 % 7 != 0) {
+          $prime[$j] = $temp2;
+          $j++;
+        }
+       }
+      $index_n = rand(8, sizeof($prime) - 1);
+      $index_g = rand(0, $index_n);
+      $bob_n = $prime[$index_n];
+      $bob_g = $prime[$index_g];
+      $bob_a = pow($bob_g, $y) % $bob_n;
 
-    return array($bob_a, $bob_n, $bob_g);
+      return 'IF';//array($bob_a, $bob_n, $bob_g);
+    }else {
+      $bob = bcmod(bcpow($g, $y), $n);
+      $the_key = bcmod(bcpow($alice, $y), $n);
+      return array('y' => $y, 'bob' => $bob, 'the_key' => $the_key);
+    }
   }
 }
  ?>

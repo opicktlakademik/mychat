@@ -19,6 +19,20 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dist/css/skins/_all-skins.min.css">
 
   <script src="<?php echo base_url(); ?>assets/myjs/PakdeEncryption.js"></script>
+  <!-- jQuery 3 -->
+  <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
+  <!-- Bootstrap 3.3.7 -->
+  <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- SlimScroll -->
+  <script src="<?php echo base_url(); ?>assets/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+  <!-- FastClick -->
+  <script src="<?php echo base_url(); ?>assets/bower_components/fastclick/lib/fastclick.js"></script>
+  <!-- AdminLTE App -->
+  <script src="<?php echo base_url(); ?>assets/dist/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="<?php echo base_url(); ?>assets/dist/js/demo.js"></script>
+
+  <script src="<?php echo base_url(); ?>assets/myjs/big.min.js"></script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -134,6 +148,18 @@ div.height-bro {
           </div>
         </div>
         <!-- /.box -->
+        <div class="row col-sm-12">
+          <div class="box">
+            <div class="box-header">
+              <h1 class="box-title">DEBUG</h1>
+            </div>
+            <div class="box-body">
+              <div id="debug">
+
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
       <!-- /.content -->
     </div>
@@ -152,19 +178,7 @@ div.height-bro {
   </footer>
 </div>
 <!-- ./wrapper -->
-
-<!-- jQuery 3 -->
-<script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- SlimScroll -->
-<script src="<?php echo base_url(); ?>assets/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="<?php echo base_url(); ?>assets/bower_components/fastclick/lib/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="<?php echo base_url(); ?>assets/dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="<?php echo base_url(); ?>assets/dist/js/demo.js"></script>
 <script src="<?php echo base_url(); ?>assets/myjs/chat.js"></script>
+
 </body>
 </html>

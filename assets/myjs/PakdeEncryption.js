@@ -86,33 +86,41 @@ class PakdeEnrcyption {
     this.dict3 = this.dict3.split("");
   }
 
-  diffieHellman() {
-    var temp1 = 5, temp2 = 7, j = 2;
-    var prime = [temp1, temp2];
-    // get the prime
-    for (var i = 0; i < 50; i++) {
-      temp1 += 6;
-      if (temp1 % 5 != 0 && temp1 % 7 != 0) {
-        prime[j] = temp1;
-        j++
+  diffieHellman(generateKey = false, bob = 0, x = 0 , n = 0) {
+    if (generateKey) {
+      var temp1 = 5, temp2 = 7, j = 2;
+      var prime = [temp1, temp2];
+      // get the prime
+      for (var i = 0; i < 50; i++) {
+        temp1 += 6;
+        if (temp1 % 5 != 0 && temp1 % 7 != 0) {
+          prime[j] = temp1;
+          j++
+        }
+        temp2 += 6;
+        if (temp2 % 7 != 0 && temp2 % 5 != 0) {
+          prime[j] = temp2;
+          j++
+        }
       }
-      temp2 += 6;
-      if (temp2 % 7 != 0 && temp2 % 5 != 0) {
-        prime[j] = temp2;
-        j++
-      }
+      //console.log(prime);
+      // menentukan x, n, g dimana g < n
+      var index_n = Math.floor(Math.random() * (prime.length - 8)) + 8;
+      var index_g = Math.floor(Math.random() * index_n);
+      var n = prime[index_n];
+      var g = Big(prime[index_g]);
+      var x = Math.floor(Math.random() * (100 - 20 + 1)) +20;
+      //count a = g^x mod n
+      var alice = g.pow(x).mod(n).toString();
+    //  var ret = [x, n, prime[index_g], alice, g.toString()];
+      var ret = {'x':x, 'g':prime[index_g], 'n':n, 'alice':parseFloat(alice), 'gfsure': g.toString(), };
+      return ret;
+    }else {
+      //var bob = new Big(bob_ex);
+      var bob_Y = Big(parseFloat(bob));
+      var key = bob_Y.pow(x).mod(n).toString();
+      return key;
     }
-    //console.log(prime);
-    // menentukan x, n, g dimana g < n
-    var index_n = Math.floor(Math.random() * (prime.length - 8)) + 8;
-    var index_g = Math.floor(Math.random() * index_n);
-    var n = prime[index_n];
-    var g = prime[index_g];
-    var x = Math.floor(Math.random() * (100 - 20 + 1)) +20;
-    //count a = g^x mod n
-    var a = Math.pow(g, x) % n;
-    var ret = [a, n, g];
-    return ret;
   }
 
   caesar_cipher(text, alphabet, key = 0){
