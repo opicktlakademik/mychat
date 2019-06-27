@@ -113,7 +113,7 @@ class PakdeEnrcyption {
       //count a = g^x mod n
       var alice = g.pow(x).mod(n).toString();
     //  var ret = [x, n, prime[index_g], alice, g.toString()];
-      var ret = {'x':x, 'g':prime[index_g], 'n':n, 'alice':parseFloat(alice), 'gfsure': g.toString(), };
+      var ret = {'x':x, 'g':prime[index_g], 'n':n, 'alice':parseFloat(alice), };
       return ret;
     }else {
       //var bob = new Big(bob_ex);
@@ -221,6 +221,7 @@ class PakdeEnrcyption {
   }
 
   unpacking(ciphertext_complete, key1, key2){
+    var plaintext = "";
     var len_ciphertext_complete = parseInt(ciphertext_complete.length);
     var len_public = parseInt(this.public_alpha.length);
     var len_ciphertext = len_ciphertext_complete - (len_public * 4);
@@ -242,12 +243,12 @@ class PakdeEnrcyption {
     var dict2 = this.caesar_cipher_decryption(dict2_dec_m, dict1.split(""), key2);
     //decrypting ciphertext
     var plaintext_dec_m = this.matrix_decryption(ciphertext, dict2);
-    var plaintext = this.caesar_cipher_decryption(plaintext_dec_m, dict1, 0, false);
+    plaintext = this.caesar_cipher_decryption(plaintext_dec_m, dict1, 0, false);
     //disabled value
     //var plaintext_dec_m = 'disabled';
     //var plaintext = 'disabled';
     //returning
-    return plaintext;
+    return plaintext.toString();
     /*var object = {
       dict_public_1: this.dict_public_1,
       dict_public_2: this.dict_public_2,

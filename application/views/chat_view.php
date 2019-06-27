@@ -48,9 +48,23 @@
   border: solid;
   border-color: rgba(0,0,0,0.1);
   margin-top: 0;
+  height: 455px;
 }
 div.height-bro {
   height: 100% !important;
+}
+p.encrypted {
+    word-break: break-word;
+}
+li.text-justify{
+  list-style: none;
+}
+li.text-justify:before {
+    content: "+";
+    margin-left: -15px;
+    margin-right: 8px;
+    color:green;
+    font-weight: bold;
 }
 </style>
 </head>
@@ -81,15 +95,14 @@ div.height-bro {
               <!-- Menu Toggle Button -->
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <!-- The user image in the navbar-->
-                <img src="<?php echo base_url(); ?>assets/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                 <span class="hidden-xs"><?php echo $this->session->userdata('nama'); ?></span>
               </a>
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
                 <li class="user-header">
-                  <img src="<?php echo base_url(); ?>assets/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
+                  <br><br>
                   <p>
                     <?php echo $this->session->userdata('nama'); ?>
                     <small>Member since Nov. 2012</small>
@@ -122,25 +135,43 @@ div.height-bro {
       <section class="content">
         <div class="row">
           <div class="col-sm-3">
-            <ul class="list-group">
-              <li class="list-group-item bg-blue">
-                <i class="fa fa-users"></i> <b>Users List</b>
-              </li>
-              <?php foreach ($user as $key): ?>
-                <li class="list-group-item"> <a href="#" class="list-click" data-id="<?php echo $key->id_user ?>"><i class="glyphicon glyphicon-triangle-right"></i> <span><?php echo $key->nama ?></span> </a> </li>
-              <?php endforeach; ?>
-             </ul>
+            <div class="box box-primary box-solid" style="max-height:523px;overflow-y:scroll;overflow:auto;">
+              <div class="box-header">
+                <h1 class="box-title">
+                  <i class="fa fa-users"></i> Member List
+                </h1>
+              </div>
+              <div>
+                <div class="box-body">
+                  <ul class="list-group" style="margin:0;padding:0;">
+                    <?php foreach ($user as $key): ?>
+                      <li class="list-group-item"> <a href="#" class="list-click" data-id="<?php echo $key->id_user ?>"><i class="glyphicon glyphicon-triangle-right"></i> <span><?php echo $key->nama ?></span> </a> </li>
+                    <?php endforeach; ?>
+                   </ul>
+                </div>
+              </div>
+            </div>
+        <!--    <div class="box box-success">
+              <div class="box-header with-border">
+                <h1 class="box-title">Process</h1>
+              </div>
+              <div class="box-body" style="height:275px;overflow-y:scroll;overflow:auto">
+                <ul id="process" style="padding-left:inherit">
+
+                </ul>
+              </div>
+            </div> -->
           </div>
           <div class="height-bro">
-            <div class="col-sm-9" id="chat-box">
-              <div class="box box-primary box-solid">
+            <div class="col-sm-9" id="chat-box1">
+              <div class="box box-primary box-solid" style="height: 523px">
                 <div class="box-header with-border">
                   <h1 class="box-title">Welcome</h1>
                 </div>
                 <div class="box-body">
                   <div class="welcome">
                     <h1>Welcome to simple chat</h1>
-                    <p>Click user on the left side to start chatting</p>
+                    <p>Click user on the left side to start chatting.</p>
                   </div>
                 </div>
               </div>
@@ -148,25 +179,13 @@ div.height-bro {
           </div>
         </div>
         <!-- /.box -->
-        <div class="row col-sm-12">
-          <div class="box">
-            <div class="box-header">
-              <h1 class="box-title">DEBUG</h1>
-            </div>
-            <div class="box-body">
-              <div id="debug">
-
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
       <!-- /.content -->
     </div>
     <!-- /.container -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
+<!--  <footer class="main-footer">
     <div class="container">
       <div class="pull-right hidden-xs">
         <b>Version</b> 2.4.0

@@ -46,19 +46,23 @@ class Chat extends CI_Controller{
       $enc1key = $k1['the_key'];
       $enc2key = $k2['the_key'];
       //get data message
-      $q = "SELECT * FROM chat WHERE (user_1 = '$id_user1' AND user_2 = '$id_user2') OR (user_1 = '$id_user2' AND user_2 = '$id_user1')";
-      $data = $this->db->query($q);
-
+      $q = "SELECT * FROM chat WHERE (user_1 = '$id_user1' AND user_2 = '$id_user2') OR (user_1 = '$id_user2' AND user_2 = '$id_user1') ORDER BY waktu ASC";
+      $data = $this->db->query($q)->result();
+      $receiver = $this->db->get_where('user', ['id_user' => $id_user2])->result();
       foreach ($data as $key) {
+        $pakde2 = new PakdeEncryption_v2;
         $response['message'][] = array(
-          'id_user1' => $key->id_user1,
-          'id_user2' => $key->id_user2,
+          'id_user1' => $key->user_1,
+          'id_user2' => $key->user_2,
           'waktu' =>   $key->waktu,
-          'pesan' => $this->pakde->encrypt($key->pesan, $enc1key, $enc2key));
+          'pesan' => $pakde2->encrypt($key->pesan, $enc1key, $enc2key));
       }
-      $response['id_user'] = $id_user1;
-      $response['key1'] = array('y' => $k1['y'], 'bob' => $key1['bob']);
-      $response['key2'] = array('y' => $k2['y'], 'bob' => $key2['bob']);
+      $response['sender_id'] = $id_user1;
+      $response['sender'] = $this->session->userdata('nama');
+      $response['recipient'] = $receiver[0]->nama;
+      $response['key1'] = array('y' => $k1['y'], 'bob' => $k1['bob'], 'kunci_geser' => $k1['the_key']);
+      $response['key2'] = array('y' => $k2['y'], 'bob' => $k2['bob'], 'kunci_geser' => $k2['the_key']);
+      $response['page'] = $this->load->view('chat_box', null, TRUE);
 
       echo json_encode($response);
 
@@ -69,15 +73,23 @@ class Chat extends CI_Controller{
 
   function encrypt()
   {
-    $this->load->view('encrypt');
+    $c = $this->load->library('PakdeEncryption_v2');
+    print_r(new PakdeEncryption_v2);
   }
 
-  function testDiffie()
+  function acknowledge()
   {
-    $key1 = array(11, 41, 31);
-    $key2 = array(2, 31, 23);
-    $the_first = $this->pakde->diffieHellman($key1[0], $key1[1], $key1[2], true);
-    print_r($the_first);
+    if ($this->input->is_ajax_request()) {
+      // code...
+      $q = "SELECT * FROM chat WHERE (user_1 = '$id_user1' AND user_2 = '$id_user2') OR (user_1 = '$id_user2' AND user_2 = '$id_user1') ORDER BY waktu ASC";
+      $num = $this->db->query($q)->num_rows();
+      if ($num > 0) {
+        // code...
+        echo $num;
+      }else {
+        echo 0;
+      }
+    }
     //echo fmod(1.40164005717698e+76, 31);
   }
 
