@@ -97,7 +97,7 @@ li.text-justify:before {
                 <!-- The user image in the navbar-->
 
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <span class="hidden-xs"><?php echo $this->session->userdata('nama'); ?></span>
+                <span class="hidden-xs" id="user_name"><?php echo $this->session->userdata('nama'); ?></span>
               </a>
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
@@ -135,7 +135,7 @@ li.text-justify:before {
       <section class="content">
         <div class="row">
           <div class="col-sm-3">
-            <div class="box box-primary box-solid" style="max-height:523px;overflow-y:scroll;overflow:auto;">
+            <div class="box box-primary box-solid" style="height:523px;overflow-y:scroll;overflow:auto;">
               <div class="box-header">
                 <h1 class="box-title">
                   <i class="fa fa-users"></i> Member List

@@ -39,7 +39,8 @@ class Login extends CI_Controller {
   public function logout()
   {
     $this->session->sess_destroy();
-    $this->session->set_flashdata('message', "Thanks for coming");
+		$pesan = "Thanks for comming";
+    $this->session->set_flashdata('message', $pesan);
     redirect('Login');
   }
 }

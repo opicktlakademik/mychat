@@ -25,7 +25,7 @@ class PakdeEnrcyption {
   }
 
   encrypt(plaintext, key1, key2){
-    var encrypt1 = this.caesar_chiper(plaintext, this.dict1, 0);
+    var encrypt1 = this.caesar_cipher(plaintext, this.dict1, 0);
     var encrypt2 = this.matrix_encryption(encrypt1, this.dict2);
     var packing = this.packing(encrypt2, key1, key2);
     return packing;

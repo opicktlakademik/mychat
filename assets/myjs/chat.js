@@ -23,13 +23,16 @@ $('.list-click').click(function(){
       console.log("\nGenerate kunci pergeseran\n"+"\nKunci 1: " + enc1key + "\nKunci 2: "+enc2key+"\n");
       console.log("\nMelakukan pendekripsian pesan\n");
       // the decrypt function -> pakde.decrypt(data.message[i].pesan, enc1key, enc2key )
-      $('#chat-title').empty();
-      $('#chat-title').append(data.receiver);
       $('#chat-box1').empty();
       $('#chat-box1').append(data.page);
-      $('#disinichat').empty();
-      $('#recipient').html(data.recipient);
-      for (var i = 0; i < data.message.length; i++) {
+      $('h3#recipient-name').empty();
+      $('h3#recipient-name').html(data.recipient);
+      $('input[name=recipient_id]').val(id_user);
+      $('input[name=recipient_name]').val(data.recipient);
+      $('.chat').empty();
+      $('#recipient_id').html(data.recipient);
+      var i = 0;
+      for (i; i < data.message.length; i++) {
         var message = pakde.decrypt(data.message[i].pesan, enc1key, enc2key );
         var possition1 = "left";
         var possition2 = "right";
@@ -41,17 +44,18 @@ $('.list-click').click(function(){
         }else {
           name = data.recipient;
         }
-        console.log("Pesan encrypted: \n"+data.message[i].pesan+"\n\nPesan ecryptd: \n"+message);
+        console.log("Pesan encrypted: \n"+data.message[i].pesan+"\n\nPesan decrypted: \n"+message);
         showChatBox(message, data.message[i].waktu, name, possition1, possition2, data.message[i].pesan.toString(), i);
-        $('#'+i).html(data.message[i].pesan);
+        //$('#'+i).html(data.message[i].pesan);
       }
+
     }
   });
 });
-function showChatBox(message, time, name, possition1, possition2, encrypt, i) {
-  var cipertext = "<p> "+encrypt+"</p>";
+function showChatBox(message, time = null, name = null, possition1 = null, possition2 = null, encrypt = null, i) {
+  var cipertext = encrypt;
   var content = `
-    <div class='item'>
+    <div class='item' id="item`+i+`">
       <br><br><br>
 
       <p class='message'>
@@ -68,12 +72,74 @@ function showChatBox(message, time, name, possition1, possition2, encrypt, i) {
         </p><br>
         <h4>Decrypted:</h4>
 
-        <p class='encrypted'>
-          <span class='text-muted' id="`+i+`">  `+" "+` </span>
+        <p class='encrypted' id="enc`+i+`">
+          <span class='text-muted'>  `+encrypt+` </span>
         </p>
       </div>
       <!-- /.attachment -->
-    </div>
+    </div><span id="span`+i+`"></span>
     `;
-  $('#disinichat').append(content);
+  $('.chat').append(content);
+  var last = $('.item').last().attr('id');
+  var elmnt = document.getElementById(last);
+  elmnt.scrollIntoView();
+}
+
+function sendMessage()
+{
+  var message = $('#input_message').val().trim();
+  if (message) {
+    $('#input_message').val('');
+    var properties = pakde(0);
+    $.get('Chat/ackReq', {key1:properties.key1_to_send, key2:properties.key2_to_send}, function(e, success){
+      if (success) {
+        var data = JSON.parse(e);
+        var enc1key = pakde(2, {'bob':data.key1.bob,'x':properties.key1.x,'n':properties.key1.n});
+        var enc2key = pakde(2, {'bob':data.key2.bob,'x':properties.key2.x,'n':properties.key2.n});
+        var encmsg = pakde(1, {'message':message, 'enc1key':enc1key, 'enc2key':enc2key});
+        console.log(data);
+        console.log(enc1key);
+        console.log(enc2key);
+        var date = new Date();
+        var month = date.getMonth()+1;
+        var dateString = date.getFullYear()+"-"+month+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+        var i = parseInt($('div.item').length);
+        //console.log(i);
+        showChatBox(message, dateString, $('span#user_name').html(), "right", "left", encmsg, i);
+        $.post('Chat/inputMessage', {'msg':encmsg, 'user':$('input[name=recipient_id]').val(), 'date':dateString}, function(e, success){
+          if (success) {
+            var data = JSON.parse(e);
+            if (!e.status) {
+              console.log(data);
+            }else {
+              console.log(data);
+            }
+          }
+        });
+
+      }
+    });
+  }
+}
+
+function pakde(act = 0, _prop = null)
+{
+  var pakde = new PakdeEnrcyption;;
+  switch (act) {
+    case 0:
+      var key1 = pakde.diffieHellman(true);
+      var key2 = pakde.diffieHellman(true);
+      var key1_to_send = {'n':key1.n, 'g':key1.g, 'alice':key1.alice};
+      var key2_to_send = {'n':key2.n, 'g':key2.g, 'alice':key2.alice};
+      return {key1, key2, key1_to_send, key2_to_send};
+      break;
+    case 1:
+      return pakde.encrypt(_prop.message, _prop.enc1key, _prop.enc2key);
+      break;
+    case 2:
+      return pakde.diffieHellman(false, _prop.bob, _prop.x, _prop.n);
+      break;
+    default:
+
+  }
 }

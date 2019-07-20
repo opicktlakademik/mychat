@@ -29,11 +29,18 @@ class PakdeEncryption_v2
       $encrypt2 = $this->matrix_encryption($encrypt1, $this->dict2);
       $packaged = $this->packing($encrypt2, $key_chiper_1, $key_chiper_2);
       return $packaged;
-      
+
     }else {
       return NULL;
     }
   }
+
+  function decrypt($ciphertext, $key1, $key2)
+  {
+    $plaintext = $this->unpacking($ciphertext, $key1, $key2);
+    return array($plaintext, $this->reportunpack);
+  }
+
   private function fisher_yates_shuffle()
   {
       //inisialisasi dict1
@@ -234,6 +241,7 @@ class PakdeEncryption_v2
                     'public2'       => $this->dict_public_2,
                   );
     $this->reportunpack = $report;
+
     return $decrypted_plaintext;
 
 
