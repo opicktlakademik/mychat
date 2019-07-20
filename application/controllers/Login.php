@@ -11,7 +11,7 @@ class Login extends CI_Controller {
 	public function index()
 	{
 		if ($this->session->userdata('loggin') AND $this->session->userdata('loggin') === TRUE AND $this->session->userdata('id_user') !== NULL) {
-			rediret('Chat');
+			redirect('Chat');
 		}else {
 			$this->load->view('login_view');
 		}
@@ -28,7 +28,7 @@ class Login extends CI_Controller {
 				$this->session->set_userdata($user);
 				redirect('Chat');
 			}else {
-				$this->session->set_flashdata('message', "Username or Password is incorrect");
+				$this->session->set_flashdata('message', "<b style='color:red'> Username or Password is incorrect</b>");
 				redirect('Login');
 			}
 		}else {
@@ -39,7 +39,8 @@ class Login extends CI_Controller {
   public function logout()
   {
     $this->session->sess_destroy();
-    $this->session->set_flashdata('message', "Thanks for coming");
+		$pesan = "Thanks for comming";
+    $this->session->set_flashdata('message', $pesan);
     redirect('Login');
   }
 }

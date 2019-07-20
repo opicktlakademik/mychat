@@ -1,76 +1,38 @@
-<div class="box box-primary direct-chat direct-chat-primary">
+<div class="box box-primary box-solid">
   <div class="box-header with-border">
-    <h3 class="box-title">Direct Chat</h3>
+    <i class="fa fa-comments-o"></i>
+
+    <h3 class="box-title" id="recipient-name">Chat</h3>
   </div>
-  <!-- /.box-header -->
-  <div class="box-body">
-    <!-- Conversations are loaded here -->
-    <div class="direct-chat-messages">
-      <!-- Message. Default to the left -->
-      <div class="direct-chat-msg">
-        <div class="direct-chat-info clearfix">
-          <span class="direct-chat-name pull-left">Alexander Pierce</span>
-          <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-        </div>
-        <!-- /.direct-chat-info -->
-        <img class="direct-chat-img" src="<?php echo base_url(); ?>assets/dist/img/user1-128x128.jpg" alt="Message User Image"><!-- /.direct-chat-img -->
-        <div class="direct-chat-text">
-          Is this template really for free? That's unbelievable!
-        </div>
-        <!-- /.direct-chat-text -->
-      </div>
-      <!-- /.direct-chat-msg -->
+  <div class="" style=" width: auto; height: 425px;">
+    <div class="box-body chat" style="overflow-y: scroll; overflow: auto; width: auto; height: 100%;" id="chat-box">
 
-      <!-- Message to the right -->
-      <div class="direct-chat-msg right">
-        <div class="direct-chat-info clearfix">
-          <span class="direct-chat-name pull-right">Sarah Bullock</span>
-          <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
-        </div>
-        <!-- /.direct-chat-info -->
-        <img class="direct-chat-img" src="<?php echo base_url(); ?>assets/dist/img/user3-128x128.jpg" alt="Message User Image"><!-- /.direct-chat-img -->
-        <div class="direct-chat-text">
-          You better believe it!
-        </div>
-        <!-- /.direct-chat-text -->
-      </div>
-      <!-- /.direct-chat-msg -->
+
     </div>
-    <!--/.direct-chat-messages-->
-
-    <!-- Contacts are loaded here -->
-    <div class="direct-chat-contacts">
-      <ul class="contacts-list">
-        <li>
-          <a href="#">
-            <img class="contacts-list-img" src="<?php echo base_url(); ?>assets/dist/img/user1-128x128.jpg" alt="User Image">
-
-            <div class="contacts-list-info">
-                  <span class="contacts-list-name">
-                    Count Dracula
-                    <small class="contacts-list-date pull-right">2/28/2015</small>
-                  </span>
-              <span class="contacts-list-msg">How have you been? I was...</span>
-            </div>
-            <!-- /.contacts-list-info -->
-          </a>
-        </li>
-        <!-- End Contact Item -->
-      </ul>
-      <!-- /.contatcts-list -->
-    </div>
-    <!-- /.direct-chat-pane -->
   </div>
-  <!-- /.box-body -->
+  <!-- /.chat -->
   <div class="box-footer">
-    <form action="#" method="post">
-      <div class="input-group">
-        <input type="text" name="message" placeholder="Type Message ..." class="form-control">
-            <span class="input-group-btn">
-              <button type="submit" class="btn btn-primary btn-flat">Send</button>
-            </span>
+    <div class="input-group">
+      <input class="form-control" placeholder="Type message..." autocomplete="off" name="message" id="input_message">
+      <input type="hidden" name="recipient_id" value="">
+      <input type="hidden" name="recipient_name" value="">
+      <div class="input-group-btn">
+        <button title="Send Message" onclick="sendMessage()"  type="button" class="btn btn-success"><i class="fa fa-send"></i></button>
       </div>
-    </form>
+    </div>
   </div>
-  <!-- /.box-footer-->
 </div>
+<!-- SlimScroll -->
+<script src="<?php echo base_url(); ?>assets/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script type="text/javascript">
+$('input[name=message]').keypress(function ( event ) {
+  if (event.which == 13) {
+    var message = $('input[name=message]').val();
+    if (message) {
+      sendMessage();
+    }else {
+      console.log("input empty");
+    }
+  }
+})
+</script>

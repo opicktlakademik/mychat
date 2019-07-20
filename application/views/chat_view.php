@@ -18,15 +18,27 @@
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dist/css/skins/_all-skins.min.css">
 
+  <script src="<?php echo base_url(); ?>assets/myjs/PakdeEncryption.js"></script>
+  <!-- jQuery 3 -->
+  <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
+  <!-- Bootstrap 3.3.7 -->
+  <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- SlimScroll -->
+  <script src="<?php echo base_url(); ?>assets/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+  <!-- FastClick -->
+  <script src="<?php echo base_url(); ?>assets/bower_components/fastclick/lib/fastclick.js"></script>
+  <!-- AdminLTE App -->
+  <script src="<?php echo base_url(); ?>assets/dist/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="<?php echo base_url(); ?>assets/dist/js/demo.js"></script>
+
+  <script src="<?php echo base_url(); ?>assets/myjs/big.min.js"></script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-
-  <!-- Google Font -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 <style media="screen">
 .welcome {
   padding-top: 3em;
@@ -36,6 +48,23 @@
   border: solid;
   border-color: rgba(0,0,0,0.1);
   margin-top: 0;
+  height: 455px;
+}
+div.height-bro {
+  height: 100% !important;
+}
+p.encrypted {
+    word-break: break-word;
+}
+li.text-justify{
+  list-style: none;
+}
+li.text-justify:before {
+    content: "+";
+    margin-left: -15px;
+    margin-right: 8px;
+    color:green;
+    font-weight: bold;
 }
 </style>
 </head>
@@ -66,15 +95,14 @@
               <!-- Menu Toggle Button -->
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <!-- The user image in the navbar-->
-                <img src="<?php echo base_url(); ?>assets/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <span class="hidden-xs"><?php echo $this->session->userdata('nama'); ?></span>
+                <span class="hidden-xs" id="user_name"><?php echo $this->session->userdata('nama'); ?></span>
               </a>
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
                 <li class="user-header">
-                  <img src="<?php echo base_url(); ?>assets/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
+                  <br><br>
                   <p>
                     <?php echo $this->session->userdata('nama'); ?>
                     <small>Member since Nov. 2012</small>
@@ -107,24 +135,44 @@
       <section class="content">
         <div class="row">
           <div class="col-sm-3">
-            <ul class="list-group">
-              <li class="list-group-item bg-blue">
-                <i class="fa fa-users"></i> <b>Users List</b>
-              </li>
-              <?php foreach ($user as $key): ?>
-                <li class="list-group-item"> <a href="#" class="list-click" data-id="<?php echo $key->id_user ?>"><i class="glyphicon glyphicon-triangle-right"></i> <span><?php echo $key->nama ?></span> </a> </li>
-              <?php endforeach; ?>
-             </ul>
-          </div>
-          <div class="col-sm-9" id="chat-box">
-            <div class="box box-primary box-solid">
-              <div class="box-header with-border">
-                <h1 class="box-title">Welcome</h1>
+            <div class="box box-primary box-solid" style="height:523px;overflow-y:scroll;overflow:auto;">
+              <div class="box-header">
+                <h1 class="box-title">
+                  <i class="fa fa-users"></i> Member List
+                </h1>
               </div>
-              <div class="box-body">
-                <div class="welcome">
-                  <h1>Welcome to simple chat</h1>
-                  <p>Click user on the left side to start chatting</p>
+              <div>
+                <div class="box-body">
+                  <ul class="list-group" style="margin:0;padding:0;">
+                    <?php foreach ($user as $key): ?>
+                      <li class="list-group-item"> <a href="#" class="list-click" data-id="<?php echo $key->id_user ?>"><i class="glyphicon glyphicon-triangle-right"></i> <span><?php echo $key->nama ?></span> </a> </li>
+                    <?php endforeach; ?>
+                   </ul>
+                </div>
+              </div>
+            </div>
+        <!--    <div class="box box-success">
+              <div class="box-header with-border">
+                <h1 class="box-title">Process</h1>
+              </div>
+              <div class="box-body" style="height:275px;overflow-y:scroll;overflow:auto">
+                <ul id="process" style="padding-left:inherit">
+
+                </ul>
+              </div>
+            </div> -->
+          </div>
+          <div class="height-bro">
+            <div class="col-sm-9" id="chat-box1">
+              <div class="box box-primary box-solid" style="height: 523px">
+                <div class="box-header with-border">
+                  <h1 class="box-title">Welcome</h1>
+                </div>
+                <div class="box-body">
+                  <div class="welcome">
+                    <h1>Welcome to simple chat</h1>
+                    <p>Click user on the left side to start chatting.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -137,7 +185,7 @@
     <!-- /.container -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
+<!--  <footer class="main-footer">
     <div class="container">
       <div class="pull-right hidden-xs">
         <b>Version</b> 2.4.0
@@ -149,20 +197,7 @@
   </footer>
 </div>
 <!-- ./wrapper -->
+<script src="<?php echo base_url(); ?>assets/myjs/chat.js"></script>
 
-<!-- jQuery 3 -->
-<script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- SlimScroll -->
-<script src="<?php echo base_url(); ?>assets/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="<?php echo base_url(); ?>assets/bower_components/fastclick/lib/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="<?php echo base_url(); ?>assets/dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="<?php echo base_url(); ?>assets/dist/js/demo.js"></script>
-<script src="<?php echo base_url(); ?>assets/myjs/chat.js"></script>
-<script src="<?php echo base_url(); ?>assets/myjs/chat.js"></script>
 </body>
 </html>
