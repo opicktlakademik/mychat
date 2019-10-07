@@ -16,6 +16,16 @@ class ChatModel extends CI_Model{
     $this->db->where_not_in($field, $id);
     $data = $this->db->get();
     return $data;
-  }
+	}
+	
+	function insertMessage($data)
+	{
+		$input  = $this->db->insert('chat',$data);
+		if($input){
+			return TRUE;
+		}else {
+			return FALSE;
+		}
+	}
 
 }

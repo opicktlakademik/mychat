@@ -4,8 +4,7 @@
  */
 class PakdeEncryption_v2
 {
-	public  $public = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,;:-?!()[]\"'\/|";
-	//public  $public = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+  public  $public = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,;:-?!()[]\"'\/|";
   public  $dict_public_1;
   public  $dict_public_2;
   private $dict1;
@@ -18,45 +17,10 @@ class PakdeEncryption_v2
 
     $this->public_initializing();
     $this->fisher_yates_shuffle();
-	}
-
-	function encryptTest2($value = NULL, $key_chiper_1, $key_chiper_2)
-	{
-		if ($value !== NULL) {
-
-			$encrypt1 = $this->caesar_chiper($value, $this->dict1);
-			$encrypt2 = $this->matrix_encryption($encrypt1, $this->dict2);
-			$packaged = $this->packing($encrypt2, $key_chiper_1, $key_chiper_2);
-			$return = [
-				"pkg" => $packaged, 
-				"mc" => $encrypt2, 
-				"cc" => $encrypt1, 
-				"dictpublic" => $this->public,
-				"dict1public"	=> $this->dict_public_1,
-				"dict2public"	=> $this->dict_public_2,
-				"dict1" => $this->dict1,
-				"dict2"	=> $this->dict2,
-				"dictspace"	=> $this->dict3,
-				"dict1caesar" => $this->reportpack['dict1_caesar'],
-				"dict1matrix" => $this->reportpack['dict1_matrix'],
-				"dict2caesar" => $this->reportpack['dict2_caesar'],
-				"dict2matrix" => $this->reportpack['dict2_matrix'],
-			];
-			return $return;
-		} else {
-			return NULL;
-		}
-	}
-	
-	function testphp($ciphertext, $key1, $key2)
-	{
-		$plaintext = $this->unpacking($ciphertext, $key1, $key2);
-		//return array($plaintext, $this->reportunpack);
-		return $plaintext;
-	}
+  }
 
 
-  function encrypt($value = NULL, $key_chiper_1, $key_chiper_2)
+  public function encrypt($value = NULL, $key_chiper_1, $key_chiper_2)
   {
     if ($value !== NULL) {
 
@@ -70,40 +34,38 @@ class PakdeEncryption_v2
     }
   }
 
-  function decrypt($ciphertext, $key1, $key2)
+  public function decrypt($ciphertext, $key1, $key2)
   {
-    $plaintext = $this->unpacking($ciphertext, $key1, $key2);
-		//return array($plaintext, $this->reportunpack);
-		return $plaintext;
+    if ($ciphertext !== NULL) {
+      $plaintext = $this->unpacking($ciphertext, $key1, $key2);
+      return $plaintext;
+    }else {
+      return NULL;
+    }
+    
+
+    
   }
 
   private function fisher_yates_shuffle()
   {
-      //inisialisasi dict1
       $this->dict1 = str_split($this->public);
       $n = count($this->dict1);
-      //fisher_yates_shuffle algorithm implementation
       for ($i = $n - 1; $i >= 0 ; $i--) {
         $j = rand(0, $i);
         $temp = $this->dict1[$i];
         $this->dict1[$i] = $this->dict1[$j];
         $this->dict1[$j] = $temp;
       }
-      //inisialisasi dict2
       $num = 0;
       for ($n=0; $n < 10; $n++) {
         for ($m=0; $m < 10; $m++) {
           if (isset($this->dict1[$num])) {
-            // code...
             $this->dict2[$n][$m] = $this->dict1[$num];
           }
           $num++;
         }
       }
-    /*  $sizeDict2Row = sizeof($this->dict2) - 1;
-      $sizeDict2Field = sizeof($this->dict2[$sizeDict2Row]) - 1 ;
-      $this->dict2[$sizeDict2Row][$sizeDict2Field] = "~";*/
-      //fisher_yates_shuffle untuk dict2
       for ($i = 0 ; $i < count($this->dict2) ; $i++) {
         $n = count($this->dict2[$i]);
         for ($j = $n - 1; $j >= 0 ; $j--) {
@@ -194,45 +156,21 @@ class PakdeEncryption_v2
   private function packing($value, $key1, $key2)
   {
     $plaintext_d1 = implode("", $this->dict1);
-    //cipertext dict1 caesar_chiper -> cipertext dict1 matrix_encryption
     $cd1 = $this->caesar_chiper($plaintext_d1, $this->dict_public_1, $key1);
     $cd1_m = $this->matrix_encryption($cd1, $this->dict_public_2);
-
-    //cipertext dict2 caesar_chiper -> cipertext dict2 matrix_encryption
     $plaintext_d2 = "";
     for ($i=0; $i < sizeof($this->dict2); $i++) {
       $plaintext_d2 .= implode("", $this->dict2[$i]);
     }
     $cd2 = $this->caesar_chiper($plaintext_d2, $this->dict1, $key2);
     $cd2_m = $this->matrix_encryption($cd2, $this->dict_public_2);
-
-    //Packaging
     $len_dict1 = strlen($cd1_m);
     $len_cipher = strlen($value);
-
     $piece_dict1_1 = substr($cd1_m, 0, $len_dict1/2);
     $piece_dict1_2 = substr($cd1_m, $len_dict1/2 , $len_dict1);
-
     $piece_cipher_1 = substr($value, 0, $len_cipher/2);
     $piece_cipher_2 = substr($value, $len_cipher/2, $len_cipher);
-
     $full_cipher = $piece_dict1_1.$piece_cipher_1.$cd2_m.$piece_cipher_2.$piece_dict1_2;
-    //return $full_cipher;
-    $report = array('dict1' => $plaintext_d1,
-                    'dict1_caesar' => $cd1,
-                    'dict1_matrix' => $cd1_m,
-                    'dict2'        => $plaintext_d2,
-                    'dict2_caesar'  => $cd2,
-                    'dict2_matrix' => $cd2_m,
-                    'ciphertext'   => $value,
-                    'full_ciphertext' => $full_cipher,
-                    'dict1_1'      => $piece_dict1_1,
-                    'dict1_2'      => $piece_dict1_2,
-                    'cipher1'      => $piece_cipher_1,
-                    'cipher2'      => $piece_cipher_2,
-                    'public'       => $this->public
-                  );
-    $this->reportpack = $report;
     return $full_cipher;
   }
 
@@ -241,47 +179,21 @@ class PakdeEncryption_v2
     $len_ciphertext_complete = strlen($ciphertext_complete);
     $len_public = strlen($this->public);
     $len_ciphertext = $len_ciphertext_complete - ($len_public * 4);
-    //unpacking dict1 from encrypted
     $dict1_1 = substr($ciphertext_complete, 0, $len_public);
     $dict1_2 = substr($ciphertext_complete, $len_ciphertext_complete - $len_public, $len_ciphertext_complete);
     $dict1 = $dict1_1.$dict1_2;
-    //unpacking ciphertext from encrypted
     $ciphertext_1 = substr($ciphertext_complete, $len_public, $len_ciphertext / 2);
     $ciphertext_2 = substr($ciphertext_complete, $len_ciphertext_complete - ($len_public + $len_ciphertext / 2 ), $len_ciphertext / 2);
     $ciphertext = $ciphertext_1.$ciphertext_2;
-    //unpacking dict2 from encrypted
     $del1_dict2 = $len_public + $len_ciphertext / 2;
     $dict2 = substr($ciphertext_complete, $del1_dict2, $len_public*2);
-    //decrypting dict1 taken from $ciphertext_complete / string encrypted and packed for decrypting ciphertext
     $dict1_4_caesar_step_1 = $this->matrix_decryption($dict1, $this->dict_public_2);
     $dict1_4_caesar = $this->caesar_cipher_decryption($dict1_4_caesar_step_1, $this->dict_public_1, $key1);
-    //decrypting dict2 taken from $ciphertext_complete / string encrypted and packed for decrypting ciphertext
     $dict2_4_matrix_step_1 = $this->matrix_decryption($dict2, $this->dict_public_2);
     $dict2_4_matrix = $this->caesar_cipher_decryption($dict2_4_matrix_step_1, str_split($dict1_4_caesar), $key2);
-    //decrypting ciphertext using $dict1_4_caesar and $dict2_4_matrix
     $decrypted_by_matrix = $this->matrix_decryption($ciphertext, $dict2_4_matrix);
     $decrypted_plaintext = $this->caesar_cipher_decryption($decrypted_by_matrix, str_split($dict1_4_caesar), 0, FALSE);
-
-    $report = array('dict1_encrypted' => $dict1,
-                    'dict1_encrypted_1' => $dict1_1,
-                    'dict1_encrypted_2' => $dict1_2,
-                    'dict1_decrypted_matrix' => $dict1_4_caesar_step_1,
-                    'dict1_decrypted_caesar' => $dict1_4_caesar,
-                    'dict2_encrypted'  => $dict2,
-                    'dict2_decrypted_matrix' => $dict2_4_matrix_step_1,
-                    'dict2_decrypted_caesar' => $dict2_4_matrix,
-                    'cipher' => $ciphertext,
-                    'cipher1' => $ciphertext_1,
-                    'cipher2' => $ciphertext_2,
-                    'plaintext_matrix' => $decrypted_by_matrix,
-                    'plaintext' => $decrypted_plaintext,
-                    'public2'       => $this->dict_public_2,
-                  );
-    $this->reportunpack = $report;
-
     return $decrypted_plaintext;
-
-
   }
 
   private function matrix_decryption($ciphertext, $alphabet)
@@ -352,16 +264,10 @@ class PakdeEncryption_v2
     return $result;
   }
 
-  function diffieHellman($generate_properties = true, $n = 0, $g = 0, $alice = 0, $y = 0)
+  function diffieHellman($generate_key = true, $n = 0, $g = 0, $alice = 0)
   {
-    if ($y == 0) {
-			# code...
-			$y = rand(20, 100);
-		}else{
-			$y = 100;
-		}
-    if ($generate_properties) {
-      // code...
+    $y = rand(20, 100);
+    if ($generate_key) {
       $temp1 = 5;
       $temp2 = 7;
       $j = 2;
@@ -382,9 +288,8 @@ class PakdeEncryption_v2
       $index_g = rand(0, $index_n);
       $bob_n = $prime[$index_n];
       $bob_g = $prime[$index_g];
-      $bob_a = bcmod(bcpow($bob_g, $y), $bob_n);
-
-      return array('bob' => $bob_a, 'n' => $bob_n, 'g' => $bob_g, 'y' => $y);
+      $bob_a = pow($bob_g, $y) % $bob_n;
+      return array($bob_a, $bob_n, $bob_g);
     }else {
       $bob = bcmod(bcpow($g, $y), $n);
       $the_key = bcmod(bcpow($alice, $y), $n);

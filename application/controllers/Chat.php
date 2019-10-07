@@ -60,8 +60,8 @@ class Chat extends CI_Controller{
       $response['sender_id'] = $id_user1;
       $response['sender'] = $this->session->userdata('nama');
       $response['recipient'] = $receiver[0]->nama;
-      $response['key1'] = array('y' => $k1['y'], 'bob' => $k1['bob'], 'kunci_geser' => $k1['the_key']);
-      $response['key2'] = array('y' => $k2['y'], 'bob' => $k2['bob'], 'kunci_geser' => $k2['the_key']);
+      $response['key1'] = array('bob' => $k1['bob']);
+      $response['key2'] = array('bob' => $k2['bob']);
       $response['page'] = $this->load->view('chat_box', null, TRUE);
 
       echo json_encode($response);
@@ -115,8 +115,8 @@ class Chat extends CI_Controller{
       $_SESSION['ENC1KEY'] = $k1['the_key'];
       $_SESSION['ENC2KEY'] = $k2['the_key'];
 
-      $response['key1'] = array('y' => $k1['y'], 'bob' => $k1['bob'], 'kunci_geser' => $k1['the_key']);
-      $response['key2'] = array('y' => $k2['y'], 'bob' => $k2['bob'], 'kunci_geser' => $k2['the_key']);
+      $response['key1'] = array('bob' => $k1['bob']);
+      $response['key2'] = array('bob' => $k2['bob']);
       $response['session'] = $_PAKDE_SESSION;
       echo json_encode($response);
     }else {
@@ -129,6 +129,7 @@ class Chat extends CI_Controller{
     if ($this->input->is_ajax_request()) {
       // code...
       if ($_POST['msg']) {
+				$response['status'] = TRUE;
         $user_1 = $this->session->userdata('id_user');
         $prop = $_SESSION['_PAKDE_SESSION'];
         $data = array(
@@ -137,7 +138,11 @@ class Chat extends CI_Controller{
           'waktu'  => $this->input->post('date'),
           'pesan'  => $this->pakde->decrypt($this->input->post('msg'), $_SESSION['ENC1KEY'], $_SESSION['ENC2KEY']),
         );
-        $response['status'] = TRUE;
+				$input = $this->ChatModel->insertMessage($data);
+				if (!$input) {
+					$response['status'] = FALSE;
+					$response['message'] = "Input can't be done";
+				}
         $response['data'] = $data;
         $response['session'] = array($_SESSION['ENC1KEY'], $_SESSION['ENC2KEY']);
         $response['msg'] = $this->input->post('msg');
